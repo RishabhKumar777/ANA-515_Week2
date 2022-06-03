@@ -1,0 +1,68 @@
+
+---
+title: "Deaths by Guns"
+author: "Rishabh Kumar"
+date: "2022"
+output:
+  pdf_document: default
+  html_document:
+    theme:
+      bootswatch: cyborg
+---
+
+``` {r, include = FALSE}
+#install.packages("bslib",repos="http://cran.us.r-project.org")
+#Note, Each gray box below is a code chunk. You need to insert a code chunk and put your R code in it. By setting echo = FALSE. this comment and any code will not show in my output document. If it were TRUE, the comment and code would appear. 
+```
+
+```{r setup, include = FALSE}
+#The include = FALSE function hides both the code and output in my output document
+#install.packages("ggplot2",repos = "http://cran.us.r-project.org")
+#install.packages("dplyr",repos = "http://cran.us.r-project.org")
+#install.packages("tidyverse",repos = "http://cran.us.r-project.org")
+#You need to install these packages first to be able to use the functions within them. You can install them from the Tools tab or write a new code chunk: install.packages("package_name"). 
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(bslib)
+```
+
+```{r, include = FALSE}
+#this next line is creating a dataset from 'fiverthirtyeight' called 'gun_deaths'
+gun_deaths=read_csv("https://raw.githubusercontent.com/fivethirtyeight/guns-data/master/full_data.csv")
+
+```
+
+```{r, include = FALSE}
+#this next line is creating a subset from 'gun_deaths' called 'youth'
+youth <- gun_deaths %>% 
+  filter(age <= 65)
+summary(youth)
+```
+
+```{r, echo = FALSE}
+#This next chunk is inline code. Inline code puts the text with the output of the function in my document.x`
+```
+
+We have data about `r nrow(gun_deaths)` individuals killed by guns. Only 
+`r nrow(gun_deaths) - nrow(youth)` are older than
+65. The distribution of the remainder is shown
+below:
+
+```{r youth-dist, echo = FALSE} 
+youth %>% 
+ggplot(aes(age)) + 
+geom_freqpoly(binwidth = 1) 
+```
+
+
+```{r race-dist, echo = FALSE} 
+youth %>% 
+ggplot(aes(fct_infreq(race) %>% fct_rev())) + 
+geom_bar() + coord_flip() + 
+labs(x = "Victim race")
+```
+
+```{r, echo = FALSE}
+#Once all of my code has been written, I click on the Knit button in the tool bar above to produce my document.
+```
